@@ -26,6 +26,12 @@ let scale = {
 };
 
 function animate() {
+  draw(ctx);
+  requestAnimationFrame(animate);
+}
+
+/**@param {CanvasRenderingContext2D} ctx */
+function draw(ctx) {
   if (isPanning) {
     offset.x += mouse.x - panning.startX;
     offset.y += mouse.y - panning.startY;
@@ -33,12 +39,6 @@ function animate() {
     panning.startX = mouse.x;
     panning.startY = mouse.y;
   }
-  draw(ctx);
-  requestAnimationFrame(animate);
-}
-
-/**@param {CanvasRenderingContext2D} ctx */
-function draw(ctx) {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -51,8 +51,8 @@ function draw(ctx) {
 
 function screenToWorld(x, y) {
   return {
-    x: (x - offset.x) * scale.x,
-    y: (y - offset.y) * scale.y,
+    x: (x - offset.x) / scale.x,
+    y: (y - offset.y) / scale.y,
   };
 }
 
@@ -60,6 +60,13 @@ function wordToScreen(x, y) {
   return {
     x: x / scale.x + offset.x,
     y: y / scale.y + offset.y,
+  };
+}
+
+function centerToScreen() {
+  offset = {
+    x: window.innerWidth / 2 - grid.getGridWidth() / 2,
+    y: window.innerHeight / 2 - grid.getGridHeight() / 2,
   };
 }
 
