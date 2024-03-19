@@ -8,7 +8,7 @@ export class Grid {
   /**@param {CanvasRenderingContext2D} ctx  */
   render(ctx) {
     ctx.beginPath();
-    ctx.strokeStyle = "#142540";
+    ctx.strokeStyle = "#9a83fd";
     for (let i = 0; i <= this.columnCount; i++) {
       ctx.moveTo(i * this.cellWidth, 0);
       ctx.lineTo(i * this.cellWidth, this.cellHeight * this.rowCount);

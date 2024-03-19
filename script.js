@@ -12,15 +12,15 @@ const offset = {
   y: window.innerHeight / 2 - grid.getGridHeight() / 2,
 };
 let isPanning = false;
-let mouse = {
+const mouse = {
   x: 0,
   y: 0,
 };
-let panning = {
+const panning = {
   startX: 0,
   startY: 0,
 };
-let scale = {
+const scale = {
   x: 1,
   y: 1,
 };
@@ -35,7 +35,6 @@ function draw(ctx) {
   if (isPanning) {
     offset.x += mouse.x - panning.startX;
     offset.y += mouse.y - panning.startY;
-
     panning.startX = mouse.x;
     panning.startY = mouse.y;
   }
@@ -58,16 +57,15 @@ function screenToWorld(x, y) {
 
 function wordToScreen(x, y) {
   return {
-    x: x / scale.x + offset.x,
-    y: y / scale.y + offset.y,
+    x: x * scale.x + offset.x,
+    y: y * scale.y + offset.y,
   };
 }
 
-function centerToScreen() {
-  offset = {
-    x: window.innerWidth / 2 - grid.getGridWidth() / 2,
-    y: window.innerHeight / 2 - grid.getGridHeight() / 2,
-  };
+function wordCenterToScreenCenter() {
+  offset.x = window.innerWidth / 2 - (grid.getGridWidth() * scale.x) / 2;
+  offset.y = window.innerHeight / 2 - (grid.getGridHeight() * scale.y) / 2;
+  console.log(offset);
 }
 
 window.addEventListener("load", () => {
@@ -79,7 +77,8 @@ window.addEventListener("resize", () => {
   draw(ctx);
 });
 window.addEventListener("click", (e) => {
-  console.log(screenToWorld(e.clientX, e.clientY));
+  console.log("Screen position:", { x: e.clientX, y: e.clientY });
+  console.log("Screen to word position:", screenToWorld(e.clientX, e.clientY));
   const wordCoordinates = screenToWorld(e.clientX, e.clientY);
   console.log(
     grid.getCellByWorldCoordinates(wordCoordinates.x, wordCoordinates.y)
@@ -107,9 +106,17 @@ window.addEventListener("mousemove", (e) => {
   mouse.y = e.clientY;
 });
 window.addEventListener("wheel", (e) => {
+  const wordMouseBefore = screenToWorld(mouse.x, mouse.y);
   scale.x = clamp(scale.x - e.deltaY / 1000, 0.1, 5);
   scale.y = clamp(scale.y - e.deltaY / 1000, 0.1, 5);
-  console.log(scale);
+  const wordMouseAfter = screenToWorld(mouse.x, mouse.y);
+  offset.x += (wordMouseAfter.x - wordMouseBefore.x) * scale.x;
+  offset.y += (wordMouseAfter.y - wordMouseBefore.y) * scale.y;
+});
+window.addEventListener("keydown", (e) => {
+  if (e.code === "Space") {
+    wordCenterToScreenCenter();
+  }
 });
 
 animate();
