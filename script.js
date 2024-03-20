@@ -46,6 +46,7 @@ function draw(ctx) {
   ctx.translate(offset.x, offset.y);
   ctx.scale(scale.x, scale.y);
   grid.render(ctx);
+  grid.drawCoordinates(ctx, screenToWorld(10, 10));
 }
 
 function screenToWorld(x, y) {

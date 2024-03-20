@@ -5,7 +5,10 @@ export class Grid {
     this.cellWidth = cellWidth;
     this.cellHeight = cellHeight;
   }
-  /**@param {CanvasRenderingContext2D} ctx  */
+  /**
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {Object} offset
+   */
   render(ctx) {
     ctx.beginPath();
     ctx.strokeStyle = "#9a83fd";
@@ -18,6 +21,32 @@ export class Grid {
       ctx.lineTo(this.cellWidth * this.columnCount, i * this.cellHeight);
     }
     ctx.stroke();
+  }
+
+  /**
+   *
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {Object} wordPosition
+   */
+  drawCoordinates(ctx, wordPosition) {
+    const fontSize = 20;
+    ctx.fillStyle = "#5cbba7";
+    ctx.textAlign = "center";
+    ctx.font = fontSize + "px Arial";
+    for (let i = 0; i < this.rowCount; i++) {
+      ctx.fillText(
+        i,
+        wordPosition.x,
+        i * this.cellHeight + (this.cellHeight + fontSize) / 2
+      );
+    }
+    for (let i = 0; i < this.columnCount; i++) {
+      ctx.fillText(
+        i,
+        i * this.cellHeight + this.cellHeight / 2,
+        wordPosition.y + fontSize
+      );
+    }
   }
 
   /**
