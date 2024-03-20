@@ -40,13 +40,18 @@ export class Grid {
         i * this.cellHeight + (this.cellHeight + fontSize) / 2
       );
     }
+    ctx.save();
+    ctx.translate(wordPosition.x, wordPosition.y);
+    ctx.rotate((-90 * Math.PI) / 180);
+    ctx.textAlign = "right";
     for (let i = 0; i < this.columnCount; i++) {
       ctx.fillText(
         i,
-        i * this.cellHeight + this.cellHeight / 2,
-        wordPosition.y + fontSize
+        0,
+        -wordPosition.x + i * this.cellWidth + (this.cellWidth + fontSize) / 2
       );
     }
+    ctx.restore();
   }
 
   /**
