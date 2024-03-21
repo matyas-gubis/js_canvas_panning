@@ -4,17 +4,25 @@ export class Grid {
     this.columnCount = columnCount;
     this.cellWidth = cellWidth;
     this.cellHeight = cellHeight;
+    this.verticalLinesDrawn = 0;
   }
   /**
    * @param {CanvasRenderingContext2D} ctx
-   * @param {Object} offset
+   * @param {Object} wordBorders
    */
-  render(ctx) {
+  render(ctx, wordBorders) {
+    this.verticalLinesDrawn = 0;
     ctx.beginPath();
     ctx.strokeStyle = "#9a83fd";
     for (let i = 0; i <= this.columnCount; i++) {
       ctx.moveTo(i * this.cellWidth, 0);
       ctx.lineTo(i * this.cellWidth, this.cellHeight * this.rowCount);
+      if (
+        i * this.cellWidth < wordBorders.right &&
+        i * this.cellWidth > wordBorders.left
+      ) {
+        this.verticalLinesDrawn++;
+      }
     }
     for (let i = 0; i <= this.rowCount; i++) {
       ctx.moveTo(0, i * this.cellHeight);
@@ -31,15 +39,21 @@ export class Grid {
   drawCoordinates(ctx, wordPosition) {
     const fontSize = 20;
     ctx.fillStyle = "#5cbba7";
-    ctx.textAlign = "center";
+    ctx.textAlign = "left";
     ctx.font = fontSize + "px Arial";
     for (let i = 0; i < this.rowCount; i++) {
       ctx.fillText(
         i,
-        wordPosition.x,
+        wordPosition.x + 10,
         i * this.cellHeight + (this.cellHeight + fontSize) / 2
       );
     }
+    ctx.fillText(
+      this.verticalLinesDrawn,
+      wordPosition.x + 10,
+      wordPosition.y + 30
+    );
+    this.verticalLinesDrawn = 0;
     ctx.save();
     ctx.translate(wordPosition.x, wordPosition.y);
     ctx.rotate((-90 * Math.PI) / 180);
@@ -47,7 +61,7 @@ export class Grid {
     for (let i = 0; i < this.columnCount; i++) {
       ctx.fillText(
         i,
-        0,
+        -10,
         -wordPosition.x + i * this.cellWidth + (this.cellWidth + fontSize) / 2
       );
     }

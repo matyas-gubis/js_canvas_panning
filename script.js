@@ -24,6 +24,12 @@ const scale = {
   x: 1,
   y: 1,
 };
+const wordBorders = {
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+};
 
 function animate() {
   draw(ctx);
@@ -45,8 +51,12 @@ function draw(ctx) {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.translate(offset.x, offset.y);
   ctx.scale(scale.x, scale.y);
-  grid.render(ctx);
-  grid.drawCoordinates(ctx, screenToWorld(10, 10));
+  wordBorders.left = screenToWorld(0, 0).x;
+  wordBorders.top = screenToWorld(0, 0).y;
+  wordBorders.right = screenToWorld(window.innerWidth, window.innerHeight).x;
+  wordBorders.bottom = screenToWorld(window.innerWidth, window.innerHeight).y;
+  grid.render(ctx, wordBorders);
+  grid.drawCoordinates(ctx, screenToWorld(0, 0));
 }
 
 function screenToWorld(x, y) {
