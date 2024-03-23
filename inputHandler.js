@@ -12,9 +12,13 @@ export class InputHandler {
       isPanning: false,
       start: { x: 0, y: 0 },
       end: { x: 0, y: 0 },
+      pannedDistance: { x: 0, y: 0 },
     };
 
-    window.addEventListener("click", (e) => {});
+    window.addEventListener("click", (e) => {
+      const mousePos = this.game.screenToWorld(e.clientX, e.clientY);
+      console.log(this.game.grid.getCellByCoordinates(mousePos.x, mousePos.y));
+    });
 
     window.addEventListener("contextmenu", (e) => {
       e.preventDefault();
@@ -23,9 +27,19 @@ export class InputHandler {
     window.addEventListener("mousedown", (e) => {
       if (e.button == 2) {
         this.panning.isPanning = true;
-        this.panning.start.x = e.clientX;
-        this.panning.start.y = e.clientY;
+        this.setPanningStart(e.clientX, e.clientY);
         document.body.style.cursor = "grabbing";
+      }
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (this.panning.isPanning) {
+        this.setPanningEnd(e.clientX, e.clientY);
+        this.calculatePanningDistance();
+        this.game.offset.x += this.panning.pannedDistance.x;
+        this.game.offset.y += this.panning.pannedDistance.y;
+        this.setPanningStart(e.clientX, e.clientY);
+        this.game.setWordBordeers();
       }
     });
 
@@ -42,10 +56,20 @@ export class InputHandler {
         Math.floor((this.game.scale - e.deltaY / 1000) * 100) / 100;
       this.game.scale = clamp(zoomValue, 0.1, 5);
       const wordMouseAfter = this.game.screenToWorld(e.clientX, e.clientY);
-      this.game.offset.x +=
-        (wordMouseAfter.x - wordMouseBefore.x) * this.game.scale;
-      this.game.offset.y +=
-        (wordMouseAfter.y - wordMouseBefore.y) * this.game.scale;
+      this.game.offset.x += Math.floor(
+        (wordMouseAfter.x - wordMouseBefore.x) * this.game.scale
+      );
+      this.game.offset.y += Math.floor(
+        (wordMouseAfter.y - wordMouseBefore.y) * this.game.scale
+      );
+      this.game.setWordBordeers();
+      this.game.hud.hudContext.clearRect(
+        0,
+        0,
+        this.game.width,
+        this.game.height
+      );
+      this.game.hud.draw(this.game.hud);
     });
 
     window.addEventListener("keydown", (e) => {
@@ -54,5 +78,19 @@ export class InputHandler {
         // TODO: center screen to player
       }
     });
+  }
+  calculatePanningDistance() {
+    this.panning.pannedDistance = {
+      x: Math.floor(this.panning.end.x - this.panning.start.x),
+      y: Math.floor(this.panning.end.y - this.panning.start.y),
+    };
+  }
+  setPanningStart(x, y) {
+    this.panning.start.x = x;
+    this.panning.start.y = y;
+  }
+  setPanningEnd(x, y) {
+    this.panning.end.x = x;
+    this.panning.end.y = y;
   }
 }
