@@ -15,6 +15,12 @@ export class Grid {
     this.rowHeight = rowHeight;
     this.columnWidth = columnWidth;
     this.game = game;
+    this.columnsToRender = this.getNumberOfColumnsToRender();
+    this.firstColumnToRender = this.getFirstColumnToRender();
+    this.lastColumnToRender = this.getLastColumnToRender();
+    this.rowsToRender = this.getNumberOfRowsToRender();
+    this.firstRowToRender = this.getFirstRowToRender();
+    this.lastRowToRender = this.getLastRowToRender();
   }
   draw() {}
   /**
@@ -37,55 +43,37 @@ export class Grid {
     ctx.closePath();
     ctx.strokeStyle = "green";
     ctx.beginPath();
-    let columnsToRender = Math.ceil(
-      this.game.width / (this.columnWidth * this.game.scale)
-    );
-    let firstColumnToRender = Math.floor(
-      -this.game.offset.x / (this.columnWidth * this.game.scale)
-    );
-    if (firstColumnToRender < 0) {
-      firstColumnToRender = 0;
-    }
-    const lastColumnToRender = this.numberOfColumns - firstColumnToRender;
-    if (lastColumnToRender < columnsToRender) {
-      columnsToRender = lastColumnToRender;
-    }
-    let rowsToRender = Math.ceil(
-      this.game.height / (this.rowHeight * this.game.scale)
-    );
-    let firstRowToRender = Math.floor(
-      -this.game.offset.y / (this.rowHeight * this.game.scale)
-    );
-    if (firstRowToRender < 0) {
-      firstRowToRender = 0;
-    }
-    const lastRowToRender = this.numberOfRows - firstRowToRender;
-    if (lastRowToRender < rowsToRender) {
-      rowsToRender = lastRowToRender;
-    }
+    this.columnsToRender = this.getNumberOfColumnsToRender();
+    this.firstColumnToRender = this.getFirstColumnToRender();
+    this.lastColumnToRender = this.getLastColumnToRender();
 
-    for (let i = 0; i <= columnsToRender; i++) {
-      if (i + firstColumnToRender >= 0) {
+    this.rowsToRender = this.getNumberOfRowsToRender();
+    this.firstRowToRender = this.getFirstRowToRender();
+    this.lastRowToRender = this.getLastRowToRender();
+
+    for (let i = 0; i <= this.columnsToRender; i++) {
+      if (i + this.firstColumnToRender >= 0) {
         ctx.moveTo(
-          (i + firstColumnToRender) * this.columnWidth,
-          firstRowToRender * this.rowHeight
+          (i + this.firstColumnToRender) * this.columnWidth,
+          this.firstRowToRender * this.rowHeight
         );
         ctx.lineTo(
-          (i + firstColumnToRender) * this.columnWidth,
-          (firstRowToRender + lastRowToRender) * this.rowHeight
+          (i + this.firstColumnToRender) * this.columnWidth,
+          (this.firstRowToRender + this.lastRowToRender) * this.rowHeight
         );
       }
     }
 
-    for (let i = 0; i <= rowsToRender; i++) {
-      if (i + firstRowToRender >= 0) {
+    for (let i = 0; i <= this.rowsToRender; i++) {
+      if (i + this.firstRowToRender >= 0) {
         ctx.moveTo(
-          firstColumnToRender * this.columnWidth,
-          (i + firstRowToRender) * this.rowHeight
+          this.firstColumnToRender * this.columnWidth,
+          (i + this.firstRowToRender) * this.rowHeight
         );
         ctx.lineTo(
-          (firstColumnToRender + lastColumnToRender) * this.columnWidth,
-          (i + firstRowToRender) * this.rowHeight
+          (this.firstColumnToRender + this.lastColumnToRender) *
+            this.columnWidth,
+          (i + this.firstRowToRender) * this.rowHeight
         );
       }
     }
@@ -119,4 +107,51 @@ export class Grid {
       return { columnIndex: col, rowIndex: row };
     }
   }
+
+  getFirstColumnToRender() {
+    const firstColumnToRender = Math.floor(
+      -this.game.offset.x / (this.columnWidth * this.game.scale)
+    );
+    if (firstColumnToRender < 0) {
+      return 0;
+    }
+    return firstColumnToRender;
+  }
+  getFirstRowToRender() {
+    let firstRowToRender = Math.floor(
+      -this.game.offset.y / (this.rowHeight * this.game.scale)
+    );
+    if (firstRowToRender < 0) {
+      firstRowToRender = 0;
+    }
+    return firstRowToRender;
+  }
+  getLastColumnToRender() {
+    return this.numberOfColumns - this.firstColumnToRender;
+  }
+  getLastRowToRender() {
+    return this.numberOfRows - this.firstRowToRender;
+  }
+  getNumberOfRowsToRender() {
+    const rowsToRender = Math.ceil(
+      this.game.height / (this.rowHeight * this.game.scale)
+    );
+    if (this.lastRowToRender < rowsToRender) {
+      return this.lastRowToRender;
+    }
+    return rowsToRender;
+  }
+  getNumberOfColumnsToRender() {
+    const columnsToRender = Math.ceil(
+      this.game.width / (this.columnWidth * this.game.scale)
+    );
+    if (this.lastColumnToRender < columnsToRender) {
+      return this.lastColumnToRender;
+    }
+    return columnsToRender;
+  }
+  getPositionOfFirstColumnToRender() {}
+  getPostionOfLastColumnToRender() {}
+  getPositonOfFirstRowToRender() {}
+  getPositionOfLastRowToRender() {}
 }

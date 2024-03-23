@@ -7,8 +7,6 @@ export class Game {
     this.width = width;
     this.height = height;
     this.input = new InputHandler(this);
-    this.grid = new Grid(50, 60, 50, 50, this);
-    this.hud = new Hud(this);
     this.offset = {
       x: 0,
       y: 0,
@@ -23,6 +21,8 @@ export class Game {
       left: 0,
       right: 0,
     };
+    this.grid = new Grid(50, 60, 50, 50, this);
+    this.hud = new Hud(this);
   }
 
   /**
