@@ -62,14 +62,7 @@ export class InputHandler {
       this.game.offset.y += Math.floor(
         (wordMouseAfter.y - wordMouseBefore.y) * this.game.scale
       );
-      this.game.setWordBordeers();
-      this.game.hud.hudContext.clearRect(
-        0,
-        0,
-        this.game.width,
-        this.game.height
-      );
-      this.game.hud.draw(this.game.hud);
+      this.game.render();
     });
 
     window.addEventListener("keydown", (e) => {

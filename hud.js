@@ -70,7 +70,7 @@ export class Hud {
       this.game.height / (this.game.grid.rowHeight * this.game.scale)
     );
     // screenwidth/ (columnwidth/scale)
-    this.hudContext.font = "20px Arial";
+    /* this.hudContext.font = "20px Arial";
     this.hudContext.textAlign = "center";
     this.hudContext.fillText(
       columnsFit +
@@ -81,7 +81,7 @@ export class Hud {
         ". The first column's startpoint should be:",
       this.game.width / 2,
       this.game.height / 2
-    );
+    ); */
   }
   /**
    * @param {CanvasRenderingContext2D} hudContext

@@ -3,13 +3,22 @@ import { Hud } from "./hud.js";
 import { InputHandler } from "./inputHandler.js";
 
 export class Game {
+  /**
+   *
+   * @param {number} width
+   * @param {number} height
+   * @param {CanvasRenderingContext2D} context
+   * @param {CanvasRenderingContext2D} hudContext
+   */
   constructor(width, height, context, hudContext) {
     this.width = width;
     this.height = height;
+    this.context = context;
+    this.hudContext = hudContext;
     this.input = new InputHandler(this);
     this.offset = {
-      x: 0,
-      y: 0,
+      x: 10,
+      y: 10,
     };
     this.scale = 1;
     this.targetFPS = 30;
@@ -21,7 +30,7 @@ export class Game {
       left: 0,
       right: 0,
     };
-    this.grid = new Grid(50, 60, 50, 50, this);
+    this.grid = new Grid(5, 6, 50, 50, this);
     this.hud = new Hud(this);
   }
 
@@ -30,13 +39,13 @@ export class Game {
    * @param {number} deltaTime
    */
   render() {
-    // context.clearRect(0, 0, this.width, this.height);
+    this.context.clearRect(0, 0, this.width, this.height);
 
     this.context.save();
     this.context.translate(this.offset.x, this.offset.y);
     this.context.scale(this.scale, this.scale);
     // console.log(this.offset);
-    this.grid.draw(this.context);
+    this.grid.draw();
     this.context.restore();
     if (this.input.panning.isPanning) {
       this.hudContext.clearRect(0, 0, this.width, this.height);
