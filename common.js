@@ -4,7 +4,7 @@ export function calculateRenderRange(offset, size, gridSize, gameSize, cellSize,
     let lastToRender = gridSize;
 
     if (offset + size < 0 || offset > gameSize) {
-        return [firstToRender, lastToRender];
+        return [firstToRender, 0];
     }
 
     const excess = offset + size - gameSize;
