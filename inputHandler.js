@@ -39,7 +39,7 @@ export class InputHandler {
         this.game.offset.x += this.panning.pannedDistance.x;
         this.game.offset.y += this.panning.pannedDistance.y;
         this.setPanningStart(e.clientX, e.clientY);
-        this.game.setWordBordeers();
+        this.game.render();
       }
     });
 

@@ -12,9 +12,9 @@ hudCanvas.height = window.innerHeight;
 const ctx = canvas.getContext("2d");
 const hudCtx = hudCanvas.getContext("2d");
 
-const game = new Game(canvas.width, canvas.height);
+const game = new Game(canvas.width, canvas.height, ctx, hudCtx);
 
-game.init(canvas, hudCtx);
+game.init(canvas);
 let lastTime = 0;
 function animate(timeStamp) {
   const deltaTime = timeStamp - lastTime;
@@ -24,4 +24,4 @@ function animate(timeStamp) {
   game.render(ctx, deltaTime, hudCtx);
   requestAnimationFrame(animate);
 }
-animate(lastTime);
+// animate(lastTime);

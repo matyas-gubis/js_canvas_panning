@@ -3,7 +3,7 @@ import { Hud } from "./hud.js";
 import { InputHandler } from "./inputHandler.js";
 
 export class Game {
-  constructor(width, height) {
+  constructor(width, height, context, hudContext) {
     this.width = width;
     this.height = height;
     this.input = new InputHandler(this);
@@ -29,36 +29,34 @@ export class Game {
    * @param {CanvasRenderingContext2D} context
    * @param {number} deltaTime
    */
-  render(context, deltaTime, hudContext) {
+  render() {
     // context.clearRect(0, 0, this.width, this.height);
-    if (this.frameTimer > this.frameInterval) {
-      context.save();
-      context.translate(this.offset.x, this.offset.y);
-      context.scale(this.scale, this.scale);
-      // console.log(this.offset);
-      this.grid.draw(context);
-      this.grid.update(context, deltaTime);
-      context.restore();
-      if (this.input.panning.isPanning) {
-        hudContext.clearRect(0, 0, this.width, this.height);
-        this.hud.draw(hudContext);
-      }
-    } else {
-      this.frameTimer += deltaTime;
+
+    this.context.save();
+    this.context.translate(this.offset.x, this.offset.y);
+    this.context.scale(this.scale, this.scale);
+    // console.log(this.offset);
+    this.grid.draw(this.context);
+    this.context.restore();
+    if (this.input.panning.isPanning) {
+      this.hudContext.clearRect(0, 0, this.width, this.height);
+      this.hud.draw(this.hudContext);
     }
+
     // console.log(this.frameTimer, this.frameInterval, deltaTime);
   }
 
   /**
    * @param {HTMLCanvasElement} canvas
    */
-  init(canvas, hudContext) {
+  init(canvas) {
     window.addEventListener("resize", () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     });
-    this.hud.setContext(hudContext);
+    this.hud.setContext(this.hudContext);
     this.hud.draw();
+    this.grid.draw();
   }
 
   screenToWorld(x, y) {
