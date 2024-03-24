@@ -1,92 +1,96 @@
+import { Game } from './game.js';
+import { calculateRenderRange } from './common.js';
+
 export class Grid {
-  constructor(rowCount, columnCount, cellWidth, cellHeight) {
-    this.rowCount = rowCount;
-    this.columnCount = columnCount;
-    this.cellWidth = cellWidth;
-    this.cellHeight = cellHeight;
-    this.verticalLinesDrawn = 0;
-  }
-  /**
-   * @param {CanvasRenderingContext2D} ctx
-   * @param {Object} wordBorders
-   */
-  render(ctx, wordBorders) {
-    this.verticalLinesDrawn = 0;
-    ctx.beginPath();
-    ctx.strokeStyle = "#9a83fd";
-    for (let i = 0; i <= this.columnCount; i++) {
-      ctx.moveTo(i * this.cellWidth, 0);
-      ctx.lineTo(i * this.cellWidth, this.cellHeight * this.rowCount);
-      if (
-        i * this.cellWidth < wordBorders.right &&
-        i * this.cellWidth > wordBorders.left
-      ) {
-        this.verticalLinesDrawn++;
-      }
+    /**
+     *
+     * @param {number} numberOfRows
+     * @param {number} numberOfColumns
+     * @param {number} rowHeight
+     * @param {number} columnWidth
+     * @param {Game} game
+     */
+    constructor(numberOfRows, numberOfColumns, rowHeight, columnWidth, game) {
+        this.numberOfRows = numberOfRows;
+        this.numberOfColumns = numberOfColumns;
+        this.rowHeight = rowHeight;
+        this.columnWidth = columnWidth;
+        this.game = game;
     }
-    for (let i = 0; i <= this.rowCount; i++) {
-      ctx.moveTo(0, i * this.cellHeight);
-      ctx.lineTo(this.cellWidth * this.columnCount, i * this.cellHeight);
-    }
-    ctx.stroke();
-  }
+    draw() {
+        const { offset, width, height, context } = this.game;
+        const { columnWidth, rowHeight, numberOfColumns, numberOfRows } = this;
 
-  /**
-   *
-   * @param {CanvasRenderingContext2D} ctx
-   * @param {Object} wordPosition
-   */
-  drawCoordinates(ctx, wordPosition) {
-    const fontSize = 20;
-    ctx.fillStyle = "#5cbba7";
-    ctx.textAlign = "left";
-    ctx.font = fontSize + "px Arial";
-    for (let i = 0; i < this.rowCount; i++) {
-      ctx.fillText(
-        i,
-        wordPosition.x + 10,
-        i * this.cellHeight + (this.cellHeight + fontSize) / 2
-      );
-    }
-    ctx.fillText(
-      this.verticalLinesDrawn,
-      wordPosition.x + 10,
-      wordPosition.y + 30
-    );
-    this.verticalLinesDrawn = 0;
-    ctx.save();
-    ctx.translate(wordPosition.x, wordPosition.y);
-    ctx.rotate((-90 * Math.PI) / 180);
-    ctx.textAlign = "right";
-    for (let i = 0; i < this.columnCount; i++) {
-      ctx.fillText(
-        i,
-        -10,
-        -wordPosition.x + i * this.cellWidth + (this.cellWidth + fontSize) / 2
-      );
-    }
-    ctx.restore();
-  }
+        const [firstColumnToRender, lastColumnToRender] = calculateRenderRange(
+            offset.x,
+            this.getGridWidth(),
+            numberOfColumns,
+            width,
+            columnWidth,
+            this.game.scale
+        );
+        const [firstRowToRender, lastRowToRender] = calculateRenderRange(
+            offset.y,
+            this.getGridHeight(),
+            numberOfRows,
+            height,
+            rowHeight,
+            this.game.scale
+        );
 
-  /**
-   * Returns the row and column number of a given cell, based on world coordinates. Indexing start from 0.
-   * @param {number} x world space coordinate x
-   * @param {number} y world space coordinate y
-   */
-  getCellByWorldCoordinates(x, y) {
-    const col = Math.floor(x / this.cellWidth);
-    const row = Math.floor(y / this.cellHeight);
-    if (col >= this.columnCount || row >= this.rowCount || col < 0 || row < 0) {
-      return null;
-    } else {
-      return { col: col, row: row };
+        context.beginPath();
+        context.strokeStyle = '#9a83fd';
+        let renderedVerticalLines = 0;
+        let renderedHorizontalLines = 0;
+        for (let i = firstColumnToRender; i <= lastColumnToRender; i++) {
+            context.moveTo(i * columnWidth, firstRowToRender * rowHeight);
+            context.lineTo(i * columnWidth, lastRowToRender * rowHeight);
+            renderedVerticalLines++;
+        }
+        for (let i = firstRowToRender; i <= lastRowToRender; i++) {
+            context.moveTo(firstColumnToRender * rowHeight, i * rowHeight);
+            context.lineTo(lastColumnToRender * rowHeight, i * rowHeight);
+            renderedHorizontalLines++;
+        }
+        context.stroke();
+        context.closePath();
+        console.log(
+            'renderedVerticalLines',
+            renderedVerticalLines,
+            '\nrenderedHorizontalLines',
+            renderedHorizontalLines,
+            '\nfirstColumnToRender',
+            firstColumnToRender,
+            '\nlastColumnToRender',
+            lastColumnToRender,
+            '\nfirstRowToRender',
+            firstRowToRender,
+            '\nlastRowToRender',
+            lastRowToRender
+        );
     }
-  }
 
-  getGridWidth() {
-    return this.columnCount * this.cellWidth;
-  }
-  getGridHeight() {
-    return this.rowCount * this.cellHeight;
-  }
+    update() {}
+
+    getGridWidth() {
+        return this.numberOfColumns * this.columnWidth * this.game.scale;
+    }
+    getGridHeight() {
+        return this.numberOfRows * this.rowHeight * this.game.scale;
+    }
+
+    /**
+     * Returns the row index and column index of a cell, based on world coordinates. Indexing start from 0.
+     * @param {number} x world space coordinate x
+     * @param {number} y world space coordinate y
+     */
+    getCellByCoordinates(x, y) {
+        const col = Math.floor(x / this.columnWidth);
+        const row = Math.floor(y / this.rowHeight);
+        if (col >= this.numberOfColumns || row >= this.numberOfRows || col < 0 || row < 0) {
+            return null;
+        } else {
+            return { columnIndex: col, rowIndex: row };
+        }
+    }
 }

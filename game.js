@@ -1,4 +1,4 @@
-import { Grid } from './gridnew.js';
+import { Grid } from './grid.js';
 import { Hud } from './hud.js';
 import { InputHandler } from './inputHandler.js';
 
