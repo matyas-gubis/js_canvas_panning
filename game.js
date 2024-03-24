@@ -21,7 +21,7 @@ export class Game {
             y: 50,
         };
         this.scale = 1;
-        this.grid = new Grid(10, 10, 50, 50, this);
+        this.grid = new Grid(10000, 10000, 50, 50, this);
         this.hud = new Hud(this);
     }
 
