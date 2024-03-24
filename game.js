@@ -37,6 +37,7 @@ export class Game {
         this.context.scale(this.scale, this.scale);
         // console.log(this.offset);
         this.grid.draw();
+        this.hud.draw();
         this.context.restore();
         // this.hud.draw(this.hudContext);
 
