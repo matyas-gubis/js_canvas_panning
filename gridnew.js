@@ -28,23 +28,34 @@ export class Grid {
         const rowHeight = this.rowHeight;
         const scale = this.game.scale;
 
+        let firstColumnToRender = 0;
+        let firstRowToRender = 0;
+        let lastColumnToRender = this.numberOfColumns;
+        let lastRowToRender = this.numberOfRows;
         if (offsetX + gridWidth < 0 || offsetX > gameWidth || offsetY + gridHeight < 0 || offsetY > gameHeight) {
             return;
         }
 
-        let firstColumnToRender =
-            offsetX > 0 ? 0 : clamp(-Math.floor(offsetX / columnWidth / scale), 0, this.numberOfColumns);
-
-        let lastColumnToRender = this.numberOfColumns;
+        // calculating number of columns to render
+        const excessColumns = offsetX + gridWidth - gameWidth;
+        if (offsetX > 0 && gridWidth < gameWidth) {
+            firstColumnToRender = 0;
+        } else if (offsetX <= 0 && gridWidth < gameWidth) {
+            firstColumnToRender = clamp(-Math.ceil(offsetX / columnWidth / scale), 0, this.numberOfColumns);
+        }
         if (offsetX + gridWidth > gameWidth) {
-            lastColumnToRender -= Math.floor((offsetX + gridWidth - gameWidth) / columnWidth / scale);
+            lastColumnToRender = this.numberOfColumns - Math.floor(excessColumns / columnWidth / scale);
         }
 
-        let firstRowToRender = offsetY > 0 ? 0 : clamp(-Math.floor(offsetY / rowHeight / scale), 0, this.numberOfRows);
-
-        let lastRowToRender = this.numberOfRows;
+        //calculating number of rows to render
+        const excessRows = offsetY + gridHeight - gameHeight;
+        if (offsetY > 0 && gridHeight < gameHeight) {
+            firstRowToRender = 0;
+        } else if (offsetY <= 0 && gridHeight < gameHeight) {
+            firstRowToRender = clamp(-Math.ceil(offsetY / rowHeight / scale), 0, this.numberOfRows);
+        }
         if (offsetY + gridHeight > gameHeight) {
-            lastRowToRender -= Math.floor((offsetY + gridHeight - gameHeight) / rowHeight / scale);
+            lastRowToRender = this.numberOfRows - Math.floor(excessRows / rowHeight / scale);
         }
 
         let renderedVerticalLines = 0;
@@ -52,20 +63,31 @@ export class Grid {
         this.game.context.beginPath();
         this.game.context.strokeStyle = '#9a83fd';
         for (let i = firstColumnToRender; i <= lastColumnToRender; i++) {
-            this.game.context.moveTo(i * this.columnWidth, firstRowToRender * this.rowHeight);
-            this.game.context.lineTo(i * this.columnWidth, lastRowToRender * this.rowHeight);
+            this.game.context.moveTo(i * columnWidth, firstRowToRender * rowHeight);
+            this.game.context.lineTo(i * columnWidth, lastRowToRender * rowHeight);
             renderedVerticalLines++;
         }
         for (let i = firstRowToRender; i <= lastRowToRender; i++) {
-            this.game.context.moveTo(firstColumnToRender * this.columnWidth, i * this.rowHeight);
-            this.game.context.lineTo(lastColumnToRender * this.columnWidth, i * this.rowHeight);
+            this.game.context.moveTo(firstColumnToRender * rowHeight, i * rowHeight);
+            this.game.context.lineTo(lastColumnToRender * rowHeight, i * rowHeight);
             renderedHorizontalLines++;
         }
-
-        console.log('renderedVerticalLines', renderedVerticalLines, 'firstColumnToRender', firstColumnToRender);
-
         this.game.context.stroke();
         this.game.context.closePath();
+        /* console.log(
+            'renderedVerticalLines',
+            renderedVerticalLines,
+            '\nrenderedHorizontalLines',
+            renderedHorizontalLines,
+            '\nfirstColumnToRender',
+            firstColumnToRender,
+            '\nlastColumnToRender',
+            lastColumnToRender,
+            '\nfirstRowToRender',
+            firstRowToRender,
+            '\nlastRowToRender',
+            lastRowToRender
+        ); */
     }
 
     update() {}
