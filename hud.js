@@ -1,4 +1,5 @@
 import { Game } from './game.js';
+import { clamp } from './util.js';
 
 export class Hud {
     /**
@@ -37,7 +38,7 @@ export class Hud {
         const excessColumns = offsetX + gridWidth - gameWidth;
         if (offsetX > 0 && gridWidth < gameWidth) {
             firstColumnToRender = 0;
-        } else if (offsetX <= 0 && gridWidth < gameWidth) {
+        } else if (offsetX <= 0) {
             firstColumnToRender = clamp(-Math.ceil(offsetX / columnWidth / scale), 0, this.game.grid.numberOfColumns);
         }
         if (offsetX + gridWidth > gameWidth) {
@@ -47,7 +48,7 @@ export class Hud {
         const excessRows = offsetY + gridHeight - gameHeight;
         if (offsetY > 0 && gridHeight < gameHeight) {
             firstRowToRender = 0;
-        } else if (offsetY <= 0 && gridHeight < gameHeight) {
+        } else if (offsetY <= 0) {
             firstRowToRender = clamp(-Math.ceil(offsetY / rowHeight / scale), 0, this.game.grid.numberOfRows);
         }
         if (offsetY + gridHeight > gameHeight) {
@@ -57,11 +58,14 @@ export class Hud {
         // Render horizontal coordinates
         this.hudContext.save();
         this.hudContext.rotate((-90 * Math.PI) / 180);
+        let horizontalCoordinatesRendered = 0;
+        let verticalCoordinatesRendered = 0;
         for (let i = firstColumnToRender; i <= lastColumnToRender; i++) {
             this.hudContext.textAlign = 'right';
             this.hudContext.fillText(i, -10, (i * columnWidth + columnWidth / 2) * scale + offsetX + 3);
             this.hudContext.textAlign = 'left';
             this.hudContext.fillText(i, -gameHeight + 10, (i * columnWidth + columnWidth / 2) * scale + offsetX + 3);
+            verticalCoordinatesRendered++;
         }
         this.hudContext.restore();
 
@@ -71,7 +75,15 @@ export class Hud {
             this.hudContext.fillText(i, 10, (i * rowHeight + rowHeight / 2) * scale + offsetY + 3);
             this.hudContext.textAlign = 'right';
             this.hudContext.fillText(i, gameWidth - 10, (i * rowHeight + rowHeight / 2) * scale + offsetY + 3);
+            horizontalCoordinatesRendered++;
         }
+        console.log(
+            'verticalCoordinatesRendered:',
+            verticalCoordinatesRendered,
+            'horizontalCoordinatesRendered:',
+            horizontalCoordinatesRendered
+        );
+        // console.log();
     }
     /**
      * @param {CanvasRenderingContext2D} hudContext

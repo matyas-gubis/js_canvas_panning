@@ -40,7 +40,7 @@ export class Grid {
         const excessColumns = offsetX + gridWidth - gameWidth;
         if (offsetX > 0 && gridWidth < gameWidth) {
             firstColumnToRender = 0;
-        } else if (offsetX <= 0 && gridWidth < gameWidth) {
+        } else if (offsetX <= 0) {
             firstColumnToRender = clamp(-Math.ceil(offsetX / columnWidth / scale), 0, this.numberOfColumns);
         }
         if (offsetX + gridWidth > gameWidth) {
@@ -51,7 +51,7 @@ export class Grid {
         const excessRows = offsetY + gridHeight - gameHeight;
         if (offsetY > 0 && gridHeight < gameHeight) {
             firstRowToRender = 0;
-        } else if (offsetY <= 0 && gridHeight < gameHeight) {
+        } else if (offsetY <= 0) {
             firstRowToRender = clamp(-Math.ceil(offsetY / rowHeight / scale), 0, this.numberOfRows);
         }
         if (offsetY + gridHeight > gameHeight) {
@@ -74,7 +74,7 @@ export class Grid {
         }
         this.game.context.stroke();
         this.game.context.closePath();
-        /* console.log(
+        /*         console.log(
             'renderedVerticalLines',
             renderedVerticalLines,
             '\nrenderedHorizontalLines',
