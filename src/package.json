@@ -1,0 +1,10 @@
+{
+    "name": "multiplayer_miner_game",
+    "version": "0.0.1",
+    "description": "A multiplayer miner game",
+    "type": "module",
+    "dependencies": {
+        "express": "^4.19.2",
+        "socket.io": "^4.7.5"
+    }
+}
