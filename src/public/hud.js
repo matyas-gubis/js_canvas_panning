@@ -38,11 +38,14 @@ export class Hud {
         // Render horizontal coordinates
         this.hudContext.save();
         this.hudContext.rotate((-90 * Math.PI) / 180);
+        let v = 0;
+        let h = 0;
         for (let i = firstColumnToRender; i <= lastColumnToRender; i++) {
             this.hudContext.textAlign = 'right';
             this.hudContext.fillText(i, -10, (i * columnWidth + columnWidth / 2) * scale + offset.x + 3);
             this.hudContext.textAlign = 'left';
             this.hudContext.fillText(i, -height + 10, (i * columnWidth + columnWidth / 2) * scale + offset.x + 3);
+            v++;
         }
         this.hudContext.restore();
 
@@ -52,7 +55,9 @@ export class Hud {
             this.hudContext.fillText(i, 10, (i * rowHeight + rowHeight / 2) * scale + offset.y + 3);
             this.hudContext.textAlign = 'right';
             this.hudContext.fillText(i, width - 10, (i * rowHeight + rowHeight / 2) * scale + offset.y + 3);
+            h++;
         }
+        // console.log('h', h, 'v', v);
     }
     /**
      * @param {CanvasRenderingContext2D} hudContext

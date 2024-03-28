@@ -54,7 +54,7 @@ export class Grid {
         }
         context.stroke();
         context.closePath();
-        console.log(
+        /* console.log(
             'renderedVerticalLines',
             renderedVerticalLines,
             '\nrenderedHorizontalLines',
@@ -67,7 +67,7 @@ export class Grid {
             firstRowToRender,
             '\nlastRowToRender',
             lastRowToRender
-        );
+        ); */
     }
 
     update() {}
