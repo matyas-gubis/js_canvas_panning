@@ -46,11 +46,14 @@ export class Game {
 
     /**
      * @param {HTMLCanvasElement} canvas
+     * @param {HTMLCanvasElement} hudCanvas
      */
-    init(canvas) {
+    init(canvas, hudCanvas) {
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            hudCanvas.width = canvas.width;
+            hudCanvas.height = canvas.height;
             this.width = window.innerWidth;
             this.height = window.innerHeight;
             this.render();

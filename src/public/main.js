@@ -15,4 +15,4 @@ const hudCtx = hudCanvas.getContext('2d');
 
 const game = new Game(canvas.width, canvas.height, ctx, hudCtx);
 
-game.init(canvas);
+game.init(canvas, hudCanvas);
