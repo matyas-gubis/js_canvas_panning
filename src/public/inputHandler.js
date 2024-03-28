@@ -60,7 +60,7 @@ export class InputHandler {
             }
         });
 
-        window.addEventListener('wheel', (e) => {
+        this.game.canvas.addEventListener('wheel', (e) => {
             const wordMouseBefore = this.game.screenToWorld(e.clientX, e.clientY);
             let zoomValue = Math.floor((this.game.scale - e.deltaY / 1000) * 100) / 100;
             this.game.scale = clamp(zoomValue, 0.1, 5);

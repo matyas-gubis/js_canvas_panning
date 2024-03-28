@@ -13,8 +13,10 @@ app.get('/', (req, res) => {
     res.sendFile(join(__dirname, '../public/index.html'));
 });
 io.on('connection', (socket) => {
+    io.emit('log', { message: 'a user connected', color: 'green' });
     console.log('a user connected');
     socket.on('disconnect', () => {
+        io.emit('log', { message: 'a user disconnected', color: 'red' });
         console.log('user disconnected');
     });
 });

@@ -7,14 +7,22 @@ export class Game {
      *
      * @param {number} width
      * @param {number} height
-     * @param {CanvasRenderingContext2D} context
-     * @param {CanvasRenderingContext2D} hudContext
+     * @param {HTMLCanvasElement} context
+     * @param {HTMLCanvasElement} hudContext
      */
-    constructor(width, height, context, hudContext) {
+    constructor(width, height, canvas, hudCanvas) {
         this.width = width;
         this.height = height;
-        this.context = context;
-        this.hudContext = hudContext;
+        this.canvas = canvas;
+        this.hudCanvas = hudCanvas;
+        /**
+         * @type {CanvasRenderingContext2D}
+         */
+        this.context = this.canvas.getContext('2d');
+        /**
+         * @type {CanvasRenderingContext2D}
+         */
+        this.hudContext = this.hudCanvas.getContext('2d');
         this.input = new InputHandler(this);
         this.offset = {
             x: 50,
@@ -48,12 +56,12 @@ export class Game {
      * @param {HTMLCanvasElement} canvas
      * @param {HTMLCanvasElement} hudCanvas
      */
-    init(canvas, hudCanvas) {
+    init() {
         window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            hudCanvas.width = canvas.width;
-            hudCanvas.height = canvas.height;
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            this.hudCanvas.width = this.canvas.width;
+            this.hudCanvas.height = this.canvas.height;
             this.width = window.innerWidth;
             this.height = window.innerHeight;
             this.render();
