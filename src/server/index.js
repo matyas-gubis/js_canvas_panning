@@ -5,13 +5,18 @@ import { dirname, join } from 'node:path';
 import { Server } from 'socket.io';
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: 'http://127.0.0.1:5500',
+    },
+});
 const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.static(join(__dirname, '../public')));
 
 app.get('/', (req, res) => {
     res.sendFile(join(__dirname, '../public/index.html'));
 });
+
 io.on('connection', (socket) => {
     io.emit('log', { message: 'a user connected', color: 'green' });
     console.log('a user connected');

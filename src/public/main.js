@@ -1,6 +1,7 @@
 import { Game } from './game.js';
+import { io } from 'https://cdn.socket.io/4.7.5/socket.io.esm.min.js';
 
-const socket = io();
+const socket = io('http://localhost:3000');
 const canvas = document.getElementById('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
